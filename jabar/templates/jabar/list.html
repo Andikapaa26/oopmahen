@@ -1,0 +1,41 @@
+{% extends "jabar/base.html" %}
+
+
+{% block content %}
+<div class="container">
+    <table class="table table-borderless">
+        <thead class="border-bottom font-weight-bold">
+            <tr>
+                <td>Nama Kota/Kabupaten</td>
+                <td>Walikota/Bupati</td>
+                <td>Wisata</td>
+                <td>Aksi</td>
+                <a href="{% url 'tambah' %}" class="btn btn-sm btn-outline-success" style="float: right;">
+                    <i class="fa-solid fa-plus"></i> Tambah data</a>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Kota in list %}
+            <tr>
+                <td>{{Kota.nama}}</td>
+                <td>{{Kota.pejabat}}</td>
+                <td>{{Kota.wisata}}</td>
+                <td>
+                    <a href="{% url 'ubah' Kota.id %}" class="btn text-secondary px-0">
+                        <i class="fa-solid fa-pen-to-square fa-lg text-success"></i>
+                    </a>
+                    <form action="{% url 'hapus' Kota.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">
+                            <i class="fa-solid fa-trash fa-lg text-danger float-right"></i>
+                        </button>
+
+                    </form>
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

@@ -1,0 +1,69 @@
+{% extends "jabar/base.html" %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+crossorigin=""/>
+{% block content %}
+<div class="container">
+    <div style="width: 90%; margin-left: auto; margin-right: auto; margin-top: 10px; margin-bottom: 10px; ">
+        <div id="map" style="width: 100%; height: 80vh; border-radius: 20px;"></div>
+    </div>
+    <table class="table table-borderless">
+        <thead class="border-bottom font-weight-bold">
+            <tr>
+                <td>Nama Kota/Kabupaten</td>
+                <td>Bentang Alam</td>
+                <td>Latitude</td>
+                <td>Longtitude</td>
+                <td>Aksi</td>
+                <a href="{% url 'tambahpeta' %}" class="btn btn-sm btn-outline-success" style="float: right;">
+                    <i class="fa-solid fa-plus"></i> Tambah data</a>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Peta in peta %}
+            <tr>
+                <td>{{Peta.nama}}</td>
+                <td>{{Peta.bentang_alam}}</td>
+                <td>{{Peta.x}}</td>
+                <td>{{Peta.y}}</td>
+                <td>
+                    <a href="{% url 'ubahpeta' Peta.id %}" class="btn text-secondary px-0">
+                        <i class="fa-solid fa-pen-to-square fa-lg text-success"></i>
+                    </a>
+                    <form action="{% url 'hapuspeta' Peta.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">
+                            <i class="fa-solid fa-trash fa-lg text-danger float-right"></i>
+                        </button>
+
+                    </form>
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+crossorigin=""></script>
+<script>
+    var data_peta = JSON.parse("{{dataJson|escapejs}}");
+    console.log(data_peta)
+    var map = L.map('map', {
+        scrollWheelZoom : false,
+    }).setView([-6.924916, 107.617062], 7);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 12,
+        minZoom: 9,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    data_peta.map(e =>{
+        L.marker([e.fields.x, e.fields.y]).addTo(map).bindPopup(`${e.fields.nama} <br><br> Bentang Alam: ${e.fields.bentang_alam} <br> ${e.fields.x}, ${e.fields.y}`)
+    })
+</script>
+{% endblock content %}
