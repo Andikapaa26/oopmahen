@@ -26,7 +26,7 @@ SECRET_KEY = 'nbzsry1qimgei!&%6kr69svh6y(cca_524v=u=lfx^9vfi6ck%'
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
+CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
 
 # Application definition
 
